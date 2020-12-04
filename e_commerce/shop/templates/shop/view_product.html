@@ -1,0 +1,34 @@
+{% extends "user/base.html" %}
+{% block content %}
+    {% if user.is_authenticated %}
+        <table>
+            <tr>
+                <th>Name of The Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Add</th>
+            </tr>
+            {% for product in products %}
+                <tr>
+                    <td>{{product.name}}</td>
+                    <td>{{product.cost}}</td>
+                    <td>
+                        <label for="quant">Quantity:</label><br>
+                        <input type="text" id="quant" name="quant"><br>
+                    </td>
+                    <td><button onclick="add_to_cart({{product.pk}}, quant)">Add to Cart</button></td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    {% else %}
+        <h2> Please login </h2> 
+    {% endif %}
+
+    <script>
+        function add_to_cart(product, quant) {
+            alert(quant);
+        }
+    </script>
+{% endblock content %}
+

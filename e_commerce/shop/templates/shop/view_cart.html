@@ -1,0 +1,12 @@
+{% extends "user/base.html" %}
+{% block content %}
+    {% if user.is_authenticated %}
+        {% for product in products %}
+            <p>product.name</p>
+            <p>product.price</p>
+            <p>product.quantity</p>
+        {% endfor%}
+    {% else %}
+        <h2> Please login </h2> 
+    {% endif %}
+{% endblock content %}

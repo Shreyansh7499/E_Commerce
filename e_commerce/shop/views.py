@@ -8,9 +8,9 @@ from rest_framework.response import Response
 
 @login_required
 def view_cart(request):
-    cart = Cart.objects.get_or_create(user = request.user)
-    products = CartProduct.objects.filter(cart = cart)
-    return render(request, 'shop/view_cart.html', { 'products': products })
+    cart, created = Cart.objects.get_or_create(user = request.user)
+    cart_products = CartProduct.objects.filter(cart = cart)
+    return render(request, 'shop/view_cart.html', { 'cart_products': cart_products })
 
 @login_required
 def view_product(request):
@@ -26,8 +26,10 @@ class CartProductViewSet(viewsets.ViewSet):
         return Response(serializer.data)
     
     def create(self, request):
-        product = Product.objects.get(request.data['pk'])
-        cart = Cart.objects.get_or_create(user = request.user)
-        cart_product = CartProduct.objects.create(product = product, cart = cart, quantity = request.data['quantity'])
+        product = Product.objects.get(pk = request.data['pk'])
+        cart, created = Cart.objects.get_or_create(user = request.user)
+        cart_product, created = CartProduct.objects.get_or_create(product = product, cart = cart)
+        cart_product.quantity += int(request.data['quantity'])
+        cart_product.save()    
         serializer = CartProductSerializer(cart_product)
         return Response(serializer.data)

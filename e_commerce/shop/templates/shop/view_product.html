@@ -14,9 +14,9 @@
                     <td>{{product.cost}}</td>
                     <td>
                         <label for="quant">Quantity:</label><br>
-                        <input type="text" id="quant" name="quant"><br>
+                        <input type="text" id="quant_{{product.pk}}" name="quant"><br>
                     </td>
-                    <td><button onclick="add_to_cart({{product.pk}}, quant)">Add to Cart</button></td>
+                    <td><button onclick="add_to_cart({{product.pk}})">Add to Cart</button></td>
                 </tr>
             {% endfor %}
         </table>
@@ -26,9 +26,38 @@
     {% endif %}
 
     <script>
-        function add_to_cart(product, quant) {
-            alert(quant);
+        function add_to_cart(product_pk) {
+            console.log(product_pk);
+            var quantity = document.getElementById("quant_" + String(product_pk)).value;
+            console.log(quantity);
+            var url = "http://127.0.0.1:8000/shop/api/CartProduct/" 
+            fetch(url, {
+                method: 'post',
+                headers: {
+                    'X-CSRFTOKEN': get_cookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "pk": parseInt(product_pk),
+                    "quantity": parseInt(quantity),
+                })
+            });
         }
+        function get_cookie(name) {
+				var cookieValue = null;
+				if (document.cookie && document.cookie != '') {
+					var cookies = document.cookie.split(';');
+					for (var i = 0; i < cookies.length; i++) {
+						var cookie = cookies[i].trim();
+						// Does this cookie string begin with the name we want?
+						if (cookie.substring(0, name.length + 1) == (name + '=')) {
+							cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+							break;
+						}
+					}
+				}
+				return cookieValue;
+			}
     </script>
 {% endblock content %}
 

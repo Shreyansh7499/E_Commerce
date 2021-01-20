@@ -1,10 +1,10 @@
 {% extends "user/base.html" %}
 {% block content %}
     {% if user.is_authenticated %}
-        {% for product in products %}
-            <p>product.name</p>
-            <p>product.price</p>
-            <p>product.quantity</p>
+        {% for cart_product in cart_products %}
+            <p> {{ cart_product.product.name }}</p>
+            <p> {{ cart_product.product.price }}</p>
+            <p> {{ cart_product.quantity }}</p>
         {% endfor%}
     {% else %}
         <h2> Please login </h2> 
